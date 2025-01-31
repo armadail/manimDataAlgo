@@ -9,7 +9,7 @@ class CreateCircle(Scene):
         circle.set_fill(PINK, opacity=0.5)  # set the color and transparency
         self.play(Create(circle))  # show the circle on screenf
 
-class displayArray(Scene):
+class BubbleSortVisual(Scene):
      
     def construct(self):
         r = [] #store rectangle array here
