@@ -2,12 +2,13 @@
 from manim import *
 import random
 
-
 class CreateCircle(Scene):
     def construct(self):
         circle = Circle()  # create a circle
         circle.set_fill(PINK, opacity=0.5)  # set the color and transparency
-        self.play(Create(circle))  # show the circle on screenf
+        self.play(Create(circle))  # show the circle on screen
+
+
 
 class BubbleSortVisual(Scene):
      
@@ -52,8 +53,8 @@ class BubbleSortVisual(Scene):
         self.play(Write(numgroup))
         print(len(numgroup))
         
-        self.bubblesort(rectgroup, numgroup)
-    
+        #self.bubblesort(rectgroup, numgroup)
+        self.insertsort(rectgroup, numgroup)
 
         
         self.wait()
@@ -89,9 +90,53 @@ class BubbleSortVisual(Scene):
             completed.append(SurroundingRectangle(rectgroup[len(rectgroup) - i - 1], color=PURE_GREEN))
             self.play(Write(completed[i]))
 
-
-
+    def insertsort(self, rectgroup, numgroup):
+        completed = []
+        
+        numkey = numgroup[0]
+        rectkey = rectgroup[0]
+        
+        completedrect = None
     
+        #typical insertion sort starts at i=0 but starting at 0 to animate the implied i=0 case;
+        for i in range(0, len(numgroup)):
+
+            numkey = numgroup[i]
+            rectkey = rectgroup[i]
+            emptySpot = numgroup[i].get_center()
+
+            completed.append(rectgroup[i])
+            
+            # implementing expanding box animation
+            new_completedrect = SurroundingRectangle(VGroup(*completed), color=PURE_GREEN)
+            if completedrect:
+                self.play(Transform(completedrect, new_completedrect))  # Expand animation
+            else:
+                completedrect = new_completedrect
+                self.play(Write(completedrect))  # First time drawing it
+            
+            # move to bottom center of the screen
+            self.play(Indicate(numkey),Indicate(rectkey), color = None)
+            self.play(numkey.animate.move_to(ORIGIN + 2*DOWN),rectkey.animate.move_to(ORIGIN + 2*DOWN))
+            
+
+            j = i - 1
+            while j >= 0 and int(numkey.text) < int(numgroup[j].text):
+                # sorted elements scoot over to the right if the elements are greater than the key
+                temp = rectgroup[j].get_center()
+                self.play(numgroup[j].animate.move_to(emptySpot),rectgroup[j].animate.move_to(emptySpot))
+                emptySpot = temp
+                
+                numgroup[j+1] = numgroup[j]
+                rectgroup[j+1] = rectgroup[j]
+                
+                j -= 1
+
+            numgroup[j+1] = numkey
+            rectgroup[j+1] = rectkey
+
+            self.play(numkey.animate.move_to(emptySpot),rectkey.animate.move_to(emptySpot))
+
 
 
 
